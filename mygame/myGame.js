@@ -6,25 +6,28 @@ var platforms;
 var player;
 var cursors;
 var stars;
-var score;
-score = 0;
+var score = 0;
 var scoreText;
 var hitPlatform;
-var winText;
+
 function preload() {
     
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.image('space', 'assets/large.png');
 }
 game.physics.startSystem(Phaser.Physics.ARCADE);
 function create() {
-    game.add.sprite(0,0, 'sky');
+    game.add.sprite(0,0, 'space');
     platforms = game.add.group();
     platforms.enableBody = true;
-    var ground = platforms.create(0, game.world.height - 64, 'ground');
-    ground.scale.setTo(2,2);
+    var ground = platforms.create(0, game.world.height - 90, 'ground');
+    ground.scale.setTo(0.5,1);
+    ground.body.immovable = true;
+    var ground = platforms.create(400, game.world.height - 90, 'ground');
+    ground.scale.setTo(0.5,1);
     ground.body.immovable = true;
     var ledge = platforms.create(280, 370, 'ground');
     ledge.body.immovable = false;
@@ -42,19 +45,21 @@ function create() {
     game.physics.arcade.enable(player);
     player.body.bounce.y = 0.5;
     player.body.gravity.y = 150;
-    player.body.collideWorldBounds = true;
+    player.body.collideWorldBounds = false;
     player.animations.add('left', [0, 1, 2, 3, ], 10, true);
     player.animations.add('right', [5, 6, 7, 8, ], 10, true);
     cursors = game.input.keyboard.createCursorKeys();
     stars = game.add.group();
     stars.enableBody = true;
-for (var i = 0; i < 100; i++) {
-var star = stars.create(i * 8, 0, 'star');
-star.body.gravity.y = 10;
-star.body.bounce.y = 0.6 + Math.random() * 0.2;
+    for (var i = 0; i < 100; i++) 
+    {
+        var star = stars.create(i * 8, 0, 'star');
+        star.body.gravity.y = 10;
+        star.body.bounce.y = 0.6 + Math.random() * 0.2;
+    }
+    scoreText = game.add.text(650, 550, 'Score: 0', {fontSize: '32px', fill: '#eeceff' });
 }
-scoreText = game.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#000' });
-}
+
 function update() {
     var hitPlatform = game.physics.arcade.collide(player, platforms);
     
